@@ -1,0 +1,38 @@
+name: pdf_annotator
+description: An offline-first PDF reader and annotator MVP in Flutter.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Backend Drive Agent Dependencies
+  googleapis: ^16.0.0
+  googleapis_auth: ^2.3.3
+  google_sign_in: ^7.2.0
+  
+  # UI Canvas Agent Dependencies
+  pdfrx: ^2.4.7
+  path_provider: ^2.1.6
+  
+  # Sync Core Agent Dependencies
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  connectivity_plus: ^7.3.1
+  provider: ^6.1.5+1
+  file_picker: ^11.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.13
+  isar_generator: ^3.1.0+1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/sample.pdf
