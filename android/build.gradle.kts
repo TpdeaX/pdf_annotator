@@ -20,6 +20,10 @@ subprojects {
 }
 
 subprojects {
+    if (project.name == "jni") {
+        project.apply(mapOf("plugin" to "org.jetbrains.kotlin.android"))
+    }
+
     val configureNamespace = {
         if (project.plugins.hasPlugin("com.android.library")) {
             val androidExt = project.extensions.getByName("android") as com.android.build.gradle.LibraryExtension
