@@ -20,7 +20,7 @@ subprojects {
 }
 
 subprojects {
-    if (project.name == "jni") {
+    if (project.name == "jni" || project.name == "file_picker") {
         project.apply(mapOf("plugin" to "org.jetbrains.kotlin.android"))
     }
 
