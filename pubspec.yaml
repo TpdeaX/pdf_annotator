@@ -12,7 +12,7 @@ dependencies:
   # Backend Drive Agent Dependencies
   googleapis: ^16.0.0
   googleapis_auth: ^2.3.3
-  google_sign_in: ^7.2.0
+  google_sign_in: ^6.2.1
   
   # UI Canvas Agent Dependencies
   pdfrx: ^2.4.7
