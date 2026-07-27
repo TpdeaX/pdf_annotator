@@ -26,6 +26,10 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Create .env File
+        run: |
+          echo "GOOGLE_WEB_CLIENT_ID=${{ secrets.GOOGLE_WEB_CLIENT_ID }}" > .env
+
       - name: Install Dependencies
         run: flutter pub get
 

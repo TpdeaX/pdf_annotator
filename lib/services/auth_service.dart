@@ -2,6 +2,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:http/http.dart' as http;
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class GoogleAuthClient extends http.BaseClient {
   final Map<String, String> _headers;
   final http.Client _client = http.Client();
@@ -16,7 +18,7 @@ class GoogleAuthClient extends http.BaseClient {
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '814439210317-asdlleffhqee3vhrsnpjla832rkl79or.apps.googleusercontent.com',
+    clientId: dotenv.env['GOOGLE_WEB_CLIENT_ID'],
     scopes: [
       drive.DriveApi.driveAppdataScope,
       drive.DriveApi.driveFileScope,

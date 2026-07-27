@@ -4,7 +4,15 @@ import 'ui/pdf_viewer.dart';
 import 'ui/home_page.dart';
 import 'providers/annotation_provider.dart';
 
-void main() {
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print('No .env file found');
+  }
   runApp(
     MultiProvider(
       providers: [
