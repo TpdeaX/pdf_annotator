@@ -30,7 +30,7 @@ subprojects {
             if (androidExt.namespace == null) {
                 androidExt.namespace = project.group.toString()
             }
-            androidExt.compileSdk = 35
+            androidExt.compileSdk = 36
         }
     }
     if (project.state.executed) {
