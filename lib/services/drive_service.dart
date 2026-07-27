@@ -10,6 +10,20 @@ class DriveService {
     _api = drive.DriveApi(_client);
   }
 
+  Future<List<drive.File>> listPdfs() async {
+    try {
+      final response = await _api.files.list(
+        q: "mimeType='application/pdf'",
+        $fields: "files(id, name, modifiedTime, lastModifyingUser)",
+        spaces: 'drive',
+      );
+      return response.files ?? [];
+    } catch (e) {
+      print('Error listing PDFs: $e');
+      return [];
+    }
+  }
+
   Future<String?> uploadFile(String name, List<int> bytes, String mimeType, {List<String>? parents}) async {
     try {
       final file = drive.File()
