@@ -29,7 +29,13 @@ class AuthService {
 
   Future<GoogleSignInAccount?> signInSilently() async {
     try {
-      return await _googleSignIn.signInSilently();
+      return await _googleSignIn.signInSilently().timeout(
+        const Duration(seconds: 3),
+        onTimeout: () {
+          print('Silent sign-in timed out');
+          return null;
+        },
+      );
     } catch (e) {
       print('Error in silent sign in: $e');
       return null;

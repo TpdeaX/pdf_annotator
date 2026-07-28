@@ -6,6 +6,6 @@ echo.
 echo Make sure you have built the web version first by running:
 echo   flutter build web
 echo.
-echo Starting server on http://localhost:8080...
+echo Starting server on http://localhost:8088...
 cd build\web
-python -m http.server 8080
+python -m http.server 8088

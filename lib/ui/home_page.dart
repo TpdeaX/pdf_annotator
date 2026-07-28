@@ -27,13 +27,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initDrive({bool interactive = false}) async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
-    final client = await _authService.getAuthenticatedClient(interactive: interactive);
-    if (client != null) {
-      _driveService = DriveService(client);
-      await _loadFiles();
+    try {
+      final client = await _authService.getAuthenticatedClient(interactive: interactive);
+      if (client != null) {
+        _driveService = DriveService(client);
+        await _loadFiles();
+      }
+    } catch (e) {
+      print('Error initializing drive: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
-    setState(() => _isLoading = false);
   }
 
   Future<void> _loadFiles() async {
