@@ -27,6 +27,15 @@ class AuthService {
 
   GoogleSignInAccount? get currentUser => _googleSignIn.currentUser;
 
+  Future<GoogleSignInAccount?> signInSilently() async {
+    try {
+      return await _googleSignIn.signInSilently();
+    } catch (e) {
+      print('Error in silent sign in: $e');
+      return null;
+    }
+  }
+
   Future<GoogleSignInAccount?> signIn() async {
     try {
       return await _googleSignIn.signIn();
@@ -40,11 +49,20 @@ class AuthService {
     await _googleSignIn.signOut();
   }
 
-  Future<http.Client?> getAuthenticatedClient() async {
-    final user = currentUser ?? await signIn();
+  Future<http.Client?> getAuthenticatedClient({bool interactive = false}) async {
+    // 1. Check existing currentUser in memory
+    // 2. Try silent sign in (restores session from cookies/localstorage without popup)
+    var user = currentUser ?? await signInSilently();
+    
+    // 3. Only if interactive is true or user clicked sign in, trigger interactive popup
+    if (user == null && interactive) {
+      user = await signIn();
+    }
+    
     if (user == null) return null;
 
     final headers = await user.authHeaders;
     return GoogleAuthClient(headers);
   }
 }
+

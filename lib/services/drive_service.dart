@@ -5,15 +5,50 @@ import 'package:http/http.dart' as http;
 class DriveService {
   final http.Client _client;
   late final drive.DriveApi _api;
+  String? _appFolderId;
 
   DriveService(this._client) {
     _api = drive.DriveApi(_client);
   }
 
-  Future<List<drive.File>> listPdfs() async {
+  static const String appFolderName = 'PDF Annotator';
+
+  Future<String?> getOrCreateAppFolder() async {
+    if (_appFolderId != null) return _appFolderId;
+
     try {
       final response = await _api.files.list(
-        q: "mimeType='application/pdf'",
+        q: "mimeType='application/vnd.google-apps.folder' and name='$appFolderName' and trashed=false",
+        $fields: "files(id, name)",
+        spaces: 'drive',
+      );
+
+      if (response.files != null && response.files!.isNotEmpty) {
+        _appFolderId = response.files!.first.id;
+        return _appFolderId;
+      }
+
+      // Folder doesn't exist, create it!
+      final folderMetaData = drive.File()
+        ..name = appFolderName
+        ..mimeType = 'application/vnd.google-apps.folder';
+
+      final createdFolder = await _api.files.create(folderMetaData);
+      _appFolderId = createdFolder.id;
+      return _appFolderId;
+    } catch (e) {
+      print('Error getting or creating App folder: $e');
+      return null;
+    }
+  }
+
+  Future<List<drive.File>> listPdfs() async {
+    try {
+      final folderId = await getOrCreateAppFolder();
+      if (folderId == null) return [];
+
+      final response = await _api.files.list(
+        q: "'$folderId' in parents and mimeType='application/pdf' and trashed=false",
         $fields: "files(id, name, modifiedTime, lastModifyingUser)",
         spaces: 'drive',
       );
@@ -68,7 +103,9 @@ class DriveService {
   }
 
   Future<String?> uploadPdf(String name, List<int> pdfBytes) async {
-    return uploadFile(name, pdfBytes, 'application/pdf');
+    final folderId = await getOrCreateAppFolder();
+    final parents = folderId != null ? [folderId] : null;
+    return uploadFile(name, pdfBytes, 'application/pdf', parents: parents);
   }
 
   Future<bool> updatePdf(String fileId, List<int> pdfBytes) async {
@@ -97,3 +134,4 @@ class DriveService {
     return null;
   }
 }
+
